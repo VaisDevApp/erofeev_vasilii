@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.MovieDetailActivity"
+    android:orientation="vertical">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/errorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="95dp"
+            android:layout_height="82dp"
+            android:src="@drawable/error" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center_horizontal"
+            android:text="Произошла ошибка при загрузке данных, проверьте подключение к сети"
+            android:textColor="#0094FF"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/reloadView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#0094FF"
+            android:text="Повторить" />
+
+    </LinearLayout>
+    <ScrollView
+        android:id="@+id/contentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/bannerView"
+                tools:srcCompat="@tools:sample/avatars"
+                android:layout_width="match_parent"
+                android:layout_height="533dp"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/titleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="31dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="48dp"
+                android:layout_marginBottom="16dp"
+                android:text="Наименование фильмаНаименование "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/descriptionView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="15dp"
+                android:ellipsize="end"
+                android:text="Описание фильма Описание фильмаОписание фильмаОписание фильма"
+                android:textColor="#99000000"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/genresView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="8dp"
+                android:text="Описание фильма Описание ильмльписание фильма"
+                android:textColor="#99000000"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/countriesView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:text="Страна"
+                android:textColor="#99000000"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
+
+    </ScrollView>
+    <ImageButton
+        android:id="@+id/backView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/back_image"/>
+
+</FrameLayout>
