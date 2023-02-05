@@ -13,69 +13,55 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.erofeev.labmovies.R;
 import ru.erofeev.labmovies.data.MovieService;
-import ru.erofeev.labmovies.data.MovieServiceImpl;
-import ru.erofeev.labmovies.databinding.ActivityMainBinding;
+import ru.erofeev.labmovies.data.MovieServiceRetrofit;
 import ru.erofeev.labmovies.databinding.ActivityMovieDetailBinding;
-import ru.erofeev.labmovies.entity.BaseJson;
 import ru.erofeev.labmovies.entity.Countries;
 import ru.erofeev.labmovies.entity.Genres;
 import ru.erofeev.labmovies.entity.MovieDetails;
 
 public class MovieDetailActivity extends AppCompatActivity {
-    MovieService movieService = new MovieServiceImpl();
-    ActivityMovieDetailBinding activityMovieDetailBinding;
+
+    public static String FILM_ID_EXTRA = "FILM_ID";
+    private MovieService movieService = new MovieServiceRetrofit();
+    private ActivityMovieDetailBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityMovieDetailBinding = ActivityMovieDetailBinding.inflate(getLayoutInflater());
-        setContentView(activityMovieDetailBinding.getRoot());
-        activityMovieDetailBinding.backView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding = ActivityMovieDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.backView.setOnClickListener(v -> finish());
         loadData();
     }
 
     private void loadData() {
-        int filmID = getIntent().getIntExtra("FILM_ID", -1);
+        int filmID = getIntent().getIntExtra(FILM_ID_EXTRA, -1);
         movieService.getMovieDetails(filmID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MovieDetails>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        activityMovieDetailBinding.progressBar.setVisibility(View.VISIBLE);
-                        activityMovieDetailBinding.errorView.setVisibility(View.INVISIBLE);
-                        activityMovieDetailBinding.contentView.setVisibility(View.INVISIBLE);
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        binding.errorView.setVisibility(View.INVISIBLE);
+                        binding.contentView.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onNext(MovieDetails movieDetails) {
-                        activityMovieDetailBinding.titleView.setText(movieDetails.getNameRu());
-                        activityMovieDetailBinding.descriptionView.setText(movieDetails.getDescription());
-                        activityMovieDetailBinding.genresView.setText("Жанры: " + Genres.buildString(movieDetails.getGenres()));
-                        activityMovieDetailBinding.countriesView.setText("Страны: " + Countries.buildString(movieDetails.getCountries()));
-                        Glide.with(MovieDetailActivity.this).load(movieDetails.getPosterUrl()).into(activityMovieDetailBinding.bannerView);
-                        activityMovieDetailBinding.errorView.setVisibility(View.INVISIBLE);
-                        activityMovieDetailBinding.progressBar.setVisibility(View.INVISIBLE);
-                        activityMovieDetailBinding.contentView.setVisibility(View.VISIBLE);
+                        setData(movieDetails);
+                        binding.errorView.setVisibility(View.INVISIBLE);
+                        binding.progressBar.setVisibility(View.INVISIBLE);
+                        binding.contentView.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        activityMovieDetailBinding.errorView.setVisibility(View.VISIBLE);
-                        activityMovieDetailBinding.progressBar.setVisibility(View.INVISIBLE);
-                        activityMovieDetailBinding.contentView.setVisibility(View.INVISIBLE);
-                        activityMovieDetailBinding.reloadView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadData();
-                            }
-                        });
+                        binding.errorView.setVisibility(View.VISIBLE);
+                        binding.progressBar.setVisibility(View.INVISIBLE);
+                        binding.contentView.setVisibility(View.INVISIBLE);
+                        binding.reloadView.setOnClickListener(v -> loadData());
                     }
 
                     @Override
@@ -83,5 +69,12 @@ public class MovieDetailActivity extends AppCompatActivity {
                         //Empty
                     }
                 });
+    }
+    private void setData(MovieDetails movieDetails) {
+        binding.titleView.setText(movieDetails.getNameRu());
+        binding.descriptionView.setText(movieDetails.getDescription());
+        binding.genresView.setText(getString(R.string.genres_string, Genres.buildString(movieDetails.getGenres())));
+        binding.countriesView.setText(getString(R.string.country_string, Countries.buildString(movieDetails.getCountries())));
+        Glide.with(MovieDetailActivity.this).load(movieDetails.getPosterUrl()).into(binding.bannerView);
     }
 }

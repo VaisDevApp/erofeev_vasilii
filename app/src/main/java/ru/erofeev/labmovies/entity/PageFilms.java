@@ -2,11 +2,11 @@ package ru.erofeev.labmovies.entity;
 
 import java.util.List;
 
-public class BaseJson {
+public class PageFilms {
     private int pagesCount;
-    private List<Films> films;
+    private List<Film> films;
 
-    public BaseJson(int pagesCount, List<Films> films) {
+    public PageFilms(int pagesCount, List<Film> films) {
         this.pagesCount = pagesCount;
         this.films = films;
     }
@@ -15,7 +15,7 @@ public class BaseJson {
         return pagesCount;
     }
 
-    public List<Films> getFilms() {
+    public List<Film> getFilms() {
         return films;
     }
 }

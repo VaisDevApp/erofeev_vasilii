@@ -1,5 +1,6 @@
 package ru.erofeev.labmovies.presentation.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.erofeev.labmovies.R;
-import ru.erofeev.labmovies.entity.Films;
+import ru.erofeev.labmovies.entity.Film;
 import ru.erofeev.labmovies.entity.Genres;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieItemHolder> {
-    private List<Films> filmsList = new ArrayList<>();
+    private List<Film> filmList = new ArrayList<>();
     private ListOnClickListener listOnClickListener;
 
     public MovieListAdapter(ListOnClickListener listOnClickListener) {
@@ -36,31 +37,30 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     @Override
     public void onBindViewHolder(@NonNull MovieItemHolder holder, int position) {
-        Films film = filmsList.get(position);
+        Context context = holder.titleView.getContext();
+        Film film = filmList.get(position);
         holder.titleView.setText(film.getNameRu());
-        holder.descriptionView.setText(Genres.buildString(film.getGenres()) + " (" + film.getYear() + ")");
+        holder.descriptionView.setText(context.getString(R.string.skobki_string, Genres.buildString(film.getGenres()), String.valueOf(film.getYear())));
         Glide.with(holder.logoView).load(film.getPosterUrlPreview()).into(holder.logoView);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listOnClickListener.onClickItem(film);
-            }
-        });
+        holder.cardView.setOnClickListener(v -> listOnClickListener.onClickItem(film));
     }
 
     @Override
     public int getItemCount() {
-        return filmsList.size();
+        return filmList.size();
     }
-    public void update(List<Films> filmsList) {
-        this.filmsList = filmsList;
+
+    public void update(List<Film> filmList) {
+        this.filmList = filmList;
         notifyDataSetChanged();
     }
-    class MovieItemHolder extends RecyclerView.ViewHolder {
+
+    static class MovieItemHolder extends RecyclerView.ViewHolder {
         public ImageView logoView;
         public TextView titleView;
         public TextView descriptionView;
         public View cardView;
+
         public MovieItemHolder(@NonNull View itemView) {
             super(itemView);
             logoView = itemView.findViewById(R.id.logoView);
@@ -69,7 +69,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
             cardView = itemView.findViewById(R.id.cardView);
         }
     }
+
     public interface ListOnClickListener {
-        void onClickItem(Films films);
+        void onClickItem(Film film);
     }
 }

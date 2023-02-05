@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ErofeevLabMovies</string>
+    <string name="genres_string">Жанры: %s</string>
+    <string name="country_string">Страны: %s</string>
+    <string name="skobki_string">%s (%s)</string>
 </resources>

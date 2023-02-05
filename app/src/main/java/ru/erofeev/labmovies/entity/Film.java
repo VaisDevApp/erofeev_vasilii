@@ -2,7 +2,7 @@ package ru.erofeev.labmovies.entity;
 
 import java.util.List;
 
-public class Films {
+public class Film {
     private int filmId;
     private String nameRu;
     private int year;
@@ -10,7 +10,7 @@ public class Films {
     private List<Genres> genres;
     private String posterUrlPreview;
 
-    public Films(int filmId, String nameRu, int year, List<Countries> countries, List<Genres> genres, String posterUrlPreview) {
+    public Film(int filmId, String nameRu, int year, List<Countries> countries, List<Genres> genres, String posterUrlPreview) {
         this.filmId = filmId;
         this.nameRu = nameRu;
         this.year = year;
