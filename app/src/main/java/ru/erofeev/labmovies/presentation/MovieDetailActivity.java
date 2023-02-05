@@ -3,6 +3,7 @@ package ru.erofeev.labmovies.presentation;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -11,6 +12,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ru.erofeev.labmovies.App;
 import ru.erofeev.labmovies.R;
 import ru.erofeev.labmovies.data.MovieService;
 import ru.erofeev.labmovies.data.MovieServiceRetrofit;
@@ -22,13 +24,15 @@ import ru.erofeev.labmovies.entity.MovieDetails;
 public class MovieDetailActivity extends AppCompatActivity {
 
     public static String FILM_ID_EXTRA = "FILM_ID";
-    private MovieService movieService = new MovieServiceRetrofit();
+    private MovieService movieService;
     private ActivityMovieDetailBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMovieDetailBinding.inflate(getLayoutInflater());
+        movieService = ((App)getApplication()).getMovieService();
+        LayoutInflater layoutInflater = getLayoutInflater();
+        binding = ActivityMovieDetailBinding.inflate(layoutInflater);
         setContentView(binding.getRoot());
         binding.backView.setOnClickListener(v -> finish());
         loadData();

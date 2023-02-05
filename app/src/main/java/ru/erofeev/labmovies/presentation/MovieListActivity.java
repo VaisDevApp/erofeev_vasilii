@@ -11,6 +11,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import ru.erofeev.labmovies.App;
 import ru.erofeev.labmovies.data.MovieService;
 import ru.erofeev.labmovies.data.MovieServiceRetrofit;
 import ru.erofeev.labmovies.databinding.ActivityMainBinding;
@@ -19,7 +20,7 @@ import ru.erofeev.labmovies.entity.Film;
 import ru.erofeev.labmovies.presentation.adapter.MovieListAdapter;
 
 public class MovieListActivity extends AppCompatActivity {
-    private MovieService movieService = new MovieServiceRetrofit();
+    private MovieService movieService;
     private ActivityMainBinding binding;
     private MovieListAdapter movieListAdapter = new MovieListAdapter(new MovieListAdapter.ListOnClickListener() {
         @Override
@@ -33,6 +34,7 @@ public class MovieListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        movieService = ((App)getApplication()).getMovieService();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.recyclerView.setAdapter(movieListAdapter);
