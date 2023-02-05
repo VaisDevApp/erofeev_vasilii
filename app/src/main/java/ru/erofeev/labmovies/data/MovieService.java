@@ -5,7 +5,7 @@ import io.reactivex.Observable;
 import ru.erofeev.labmovies.entity.MovieDetails;
 
 public interface MovieService {
-    Observable<PageFilms> getMovies100();
+    Observable<PageFilms> getMovies100(int page);
     Observable<MovieDetails> getMovieDetails(int id);
 
 }

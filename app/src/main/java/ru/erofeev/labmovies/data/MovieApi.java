@@ -16,7 +16,7 @@ public interface MovieApi {
             API_KEY_HEADER
     })
     @GET("api/v2.2/films/top")
-    Observable<PageFilms> getMovies100(@Query("type") String type);
+    Observable<PageFilms> getMovies100(@Query("type") String type, @Query("page") int page);
 
     @Headers({
             "accept: application/json",

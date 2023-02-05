@@ -1,5 +1,6 @@
 package ru.erofeev.labmovies.presentation;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -13,37 +14,57 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import ru.erofeev.labmovies.App;
 import ru.erofeev.labmovies.data.MovieService;
-import ru.erofeev.labmovies.data.MovieServiceRetrofit;
-import ru.erofeev.labmovies.databinding.ActivityMainBinding;
+import ru.erofeev.labmovies.databinding.ActivityMovieListBinding;
 import ru.erofeev.labmovies.entity.PageFilms;
 import ru.erofeev.labmovies.entity.Film;
 import ru.erofeev.labmovies.presentation.adapter.MovieListAdapter;
 
 public class MovieListActivity extends AppCompatActivity {
+    private final static int MAX_PAGE = 5;
+    private final static String CURRENT_PAGE_KEY = "CURRENT_PAGE_KEY";
     private MovieService movieService;
-    private ActivityMainBinding binding;
-    private MovieListAdapter movieListAdapter = new MovieListAdapter(new MovieListAdapter.ListOnClickListener() {
-        @Override
-        public void onClickItem(Film film) {
-            Intent intent = new Intent(MovieListActivity.this, MovieDetailActivity.class);
-            intent.putExtra(MovieDetailActivity.FILM_ID_EXTRA, film.getFilmId());
-            startActivity(intent);
-        }
-    });
+    private ActivityMovieListBinding binding;
+    private int currentPage = 1;
+    private MovieListAdapter movieListAdapter = new MovieListAdapter(film -> openDetails(film));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        movieService = ((App)getApplication()).getMovieService();
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        if (savedInstanceState != null) {
+            currentPage = savedInstanceState.getInt(CURRENT_PAGE_KEY);
+        }
+        movieService = ((App) getApplication()).getMovieService();
+        binding = ActivityMovieListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         binding.recyclerView.setAdapter(movieListAdapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));  //располагаем элементы списка вертикально
+        binding.nextView.setOnClickListener(v -> loadNextPage());
+        binding.preView.setOnClickListener(v -> preViewPage());
         loadData();
+        updateVisibilityPageButton();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_PAGE_KEY, currentPage);
+    }
+
+    private void updateVisibilityPageButton() {
+        if (currentPage == MAX_PAGE) {
+            binding.nextView.setVisibility(View.INVISIBLE);
+        } else {
+            binding.nextView.setVisibility(View.VISIBLE);
+        }
+        if (currentPage == 1) {
+            binding.preView.setVisibility(View.INVISIBLE);
+        } else {
+            binding.preView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void loadData() {
-        movieService.getMovies100()
+        movieService.getMovies100(currentPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<PageFilms>() {
@@ -75,5 +96,27 @@ public class MovieListActivity extends AppCompatActivity {
                         //Empty
                     }
                 });
+    }
+
+    private void loadNextPage() {
+        if (currentPage > 0 && currentPage < MAX_PAGE) {
+            currentPage++;
+            loadData();
+        }
+        updateVisibilityPageButton();
+    }
+
+    private void preViewPage() {
+        if (currentPage > 1 && currentPage <= MAX_PAGE) {
+            currentPage--;
+            loadData();
+        }
+        updateVisibilityPageButton();
+    }
+
+    private void openDetails(Film film) {
+        Intent intent = new Intent(MovieListActivity.this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.FILM_ID_EXTRA, film.getFilmId());
+        startActivity(intent);
     }
 }

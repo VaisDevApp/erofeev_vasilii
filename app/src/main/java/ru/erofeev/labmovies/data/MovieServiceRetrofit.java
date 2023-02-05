@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.erofeev.labmovies.entity.PageFilms;
 import ru.erofeev.labmovies.entity.MovieDetails;
 
-public class MovieServiceRetrofit implements MovieService{
+public class MovieServiceRetrofit implements MovieService {
     private static String BASE_URL = "https://kinopoiskapiunofficial.tech/";
     private static String TYPE_TOP_100 = "TOP_100_POPULAR_FILMS";
     private MovieApi movieApi;
@@ -22,8 +22,8 @@ public class MovieServiceRetrofit implements MovieService{
     }
 
     @Override
-    public Observable<PageFilms> getMovies100() {
-        return movieApi.getMovies100(TYPE_TOP_100);
+    public Observable<PageFilms> getMovies100(int page) {
+        return movieApi.getMovies100(TYPE_TOP_100, page);
     }
 
     @Override

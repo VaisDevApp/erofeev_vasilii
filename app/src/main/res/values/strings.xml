@@ -3,4 +3,9 @@
     <string name="genres_string">Жанры: %s</string>
     <string name="country_string">Страны: %s</string>
     <string name="skobki_string">%s (%s)</string>
+    <string name="title_movie_list">Популярные</string>
+    <string name="back">Назад</string>
+    <string name="next">Вперед</string>
+    <string name="error_description">Произошла ошибка при загрузке данных, проверьте подключение к сети</string>
+    <string name="repeat">Повторить</string>
 </resources>
